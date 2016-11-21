@@ -1,5 +1,5 @@
 (($) => {
-//Megan, and I worked on this together (on the same computer) so the committs are from both of us!!
+    //Megan, and I worked on this together (on the same computer) so the committs are from both of us!!
 
     var cache = {};
 
@@ -14,13 +14,21 @@
             touchCache.makeABox.height = 0;
             touchCache.makeABox.width = 0;
 
-            //change this 
-            var defaultBox = "<div id=\"" + 
+// updted this
+            var defaultBox = $("<div id=\"" + 
                 touch.identifier + "\" class=\"box\"style=\"width: " +
                 touchCache.makeABox.width + "px; height: " + 
                 touchCache.makeABox.height + "px; left: " + 
                 touchCache.initialX + "px; top: " +
-                touchCache.initialY + "px\"></div>";
+                touchCache.initialY + "px\"></div>");
+
+            defaultBox.data({
+                position: {left: touch.pageX, top: touch.pageY},
+                velocity: { x: 0, y: 0, z: 0 },
+                acceleration: { x: 0, y: 0, z: 0}
+            });
+//updated^ this
+       
 
             $(touch.target).append(defaultBox);
             $("#" + touch.identifier).addClass("make-a-box");
@@ -50,12 +58,10 @@
                 touch.target.movingBox.offset(newPosition);
             }
 
-            //  var deleteBox;
             // if (leftPos < 0 || topPos < 0 || rightPos > parent.width() || bottomPos > parent.height()) {
             //     deleteBox == true;
             // }
-            // else 
-            // if movingBox == 280px && movingBox == 430px) {
+            // else if (leftPos == 280px || bottomPos == 430px) {
             //     deleteBox == true
             // }
             // if (deleteBox) {
@@ -100,7 +106,8 @@
         event.preventDefault();
     };
 
-    //http://stackoverflow.com/questions/10821258/gesture-and-touch-events-smoothly-resize-a-square
+
+//added this
     let resize = (event) => {
         $.each(event.changedTouches, (index, touch) => {
             element.addEventListener("gesturechange", gestureChange, false);
@@ -128,6 +135,9 @@
 
         });
     };
+//added this
+
+
 
     /**
      * Concludes a drawing or moving sequence.
@@ -135,26 +145,33 @@
     let endDrag = (event) => {
         $.each(event.changedTouches, (index, touch) => {
             if (touch.target.movingBox) {
-                // Change state to "not-moving-anything" by clearing out
-                // touch.target.movingBox.
-                
+
                 var boxParent = $(touch.target.movingBox).parent(),
                     parentWidth = boxParent.width(),
                     parentHeight = boxParent.height(),
+                    
                     parentBottom = parentWidth + boxParent.offset().top,
                     parentRight = parentHeight + boxParent.offset().left,
-                    
-
                     parentTop = parentHeight + boxParent.offset().bottom,
                     parentLeft = parentHeight + boxParent.offset().right,
 
-                    outsideDrawingArea = (touch.target.movingBox.offset().left > parentRight ||
-                                    touch.target.movingBox.offset().top > parentBottom) ||
-                                    touch.target.movingBox.offset().bottom < parentTop ||
-                                    touch.target.movingBox.offset.right < parentLeft;
 
-                    // outsideDrawingArea = (touch.target.movingBox.offset().left == 280px &&
-                    //                     touch.target.movingBox.offset().top == 430px)
+//new
+                    // outsideDrawingArea = 
+                    //                 touch.target.movingBox.offset().left > parentRight ||
+                    //                 touch.target.movingBox.offset().top > parentBottom ||
+                    //                 (touch.target.movingBox.offset().bottom < parentTop ||
+                    //                 touch.target.movingBox.offset.right < parentLeft);
+
+                    outsideDrawingArea = 
+                                    touch.target.movingBox.offset().left > 280 &&
+                                    touch.target.movingBox.offset().top > 430;
+                                    // touch.target.movingBox.offset().top > 430 &&
+                                    // (touch.target.movingBox.offset().bottom < 50 &&
+                                    // touch.target.movingBox.offset.right < 90);
+
+                    //style="width: 50px; height: 90px; left: 280px; top: 430px"
+//new^
 
                 if (outsideDrawingArea) {
                     (touch.target.movingBox).remove();
@@ -330,5 +347,4 @@
         return this;
     };
 })(jQuery);
-
 
