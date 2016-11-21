@@ -1,4 +1,37 @@
 (($) => {
+//Megan, and I worked on this together (on the same computer) so the committs are from both of us!!
+
+    var cache = {};
+
+    let startCreate = (event) => {
+        $.each(event.changedTouches, function (index, touch) {
+            var touchCache = {};
+            cache[touch.identifier] = touchCache;
+            touchCache.makeABox = {};
+            touchCache.makeABox = {};
+            touchCache.initialX = touch.pageX;
+            touchCache.initialY = touch.pageY;
+            touchCache.makeABox.height = 0;
+            touchCache.makeABox.width = 0;
+
+            //change this 
+            var defaultBox = "<div id=\"" + 
+                touch.identifier + "\" class=\"box\"style=\"width: " +
+                touchCache.makeABox.width + "px; height: " + 
+                touchCache.makeABox.height + "px; left: " + 
+                touchCache.initialX + "px; top: " +
+                touchCache.initialY + "px\"></div>";
+
+            $(touch.target).append(defaultBox);
+            $("#" + touch.identifier).addClass("make-a-box");
+            $(touch.target).find("div.box").each(function (index, element) {
+                element.addEventListener("touchstart", startMove, false);
+                element.addEventListener("touchend", unhighlight, false);
+            });
+
+        });
+        event.preventDefault();
+    }
 
     /**
      * Tracks a box as it is rubberbanded or moved across the drawing area.
@@ -16,10 +49,84 @@
                 $(touch.target).data('position', newPosition);
                 touch.target.movingBox.offset(newPosition);
             }
+
+            //  var deleteBox;
+            // if (leftPos < 0 || topPos < 0 || rightPos > parent.width() || bottomPos > parent.height()) {
+            //     deleteBox == true;
+            // }
+            // else 
+            // if movingBox == 280px && movingBox == 430px) {
+            //     deleteBox == true
+            // }
+            // if (deleteBox) {
+            //      target.addClass("box-delete");
+            // } else {
+            //     target.removeClass("box-delete");
+            // }
+
+            //CHANGE THIS
+            var touchCache = cache[touch.identifier];
+            if (touchCache && touchCache.makeABox) {
+                var touchX = touch.pageX,
+                    touchY = touch.pageY,
+                    touchXGreater = touch.pageX > touchCache.initialX,
+                    touchYGreater = touch.pageY > touchCache.initialY;
+                //  CHANGE THIS
+                touchCache.makeABox = {
+                    // if (touchXGreater) {
+                    //     width : touchX - touchCache.initialX
+                    // } else {
+                    //     width : touchCache.initialX - touchX
+                    // }
+                    width   : touchXGreater ? touchX - touchCache.initialX : touchCache.initialX - touchX,
+                    height  : touchYGreater ? touchY - touchCache.initialY : touchCache.initialY - touchY,
+                    left    : touchXGreater ? touchCache.initialX : touchX,
+                    top     : touchYGreater ? touchCache.initialY : touchY
+                };
+
+                $('#' + touch.identifier).css({
+                    width: touchCache.makeABox.width,
+                    height: touchCache.makeABox.height,
+                    left: touchCache.makeABox.left,
+                    top: touchCache.makeABox.top
+                });
+            }
+
+
+
         });
 
         // Don't do any touch scrolling.
         event.preventDefault();
+    };
+
+    //http://stackoverflow.com/questions/10821258/gesture-and-touch-events-smoothly-resize-a-square
+    let resize = (event) => {
+        $.each(event.changedTouches, (index, touch) => {
+            element.addEventListener("gesturechange", gestureChange, false);
+            element.addEventListener("gestureend", gestureEnd, false);
+            
+            function gestureChange(e) {
+                e.preventDefault();
+                scale = e.scale;
+                var tempWidth = _width * scale;
+
+                if (tempWidth > max) tempWidth = max;
+                if (tempWidth < min) tempWidth = min;
+
+                $('#square').css({
+                    'width': tempWidth + 'px',
+                'height': tempWidth + 'px'
+                });
+            }
+
+            function gestureEnd(e) {
+
+                e.preventDefault();
+                _width = parseInt($('#square').css('width'));
+            }
+
+        });
     };
 
     /**
@@ -30,7 +137,42 @@
             if (touch.target.movingBox) {
                 // Change state to "not-moving-anything" by clearing out
                 // touch.target.movingBox.
+                
+                var boxParent = $(touch.target.movingBox).parent(),
+                    parentWidth = boxParent.width(),
+                    parentHeight = boxParent.height(),
+                    parentBottom = parentWidth + boxParent.offset().top,
+                    parentRight = parentHeight + boxParent.offset().left,
+                    
+
+                    parentTop = parentHeight + boxParent.offset().bottom,
+                    parentLeft = parentHeight + boxParent.offset().right,
+
+                    outsideDrawingArea = (touch.target.movingBox.offset().left > parentRight ||
+                                    touch.target.movingBox.offset().top > parentBottom) ||
+                                    touch.target.movingBox.offset().bottom < parentTop ||
+                                    touch.target.movingBox.offset.right < parentLeft;
+
+                    // outsideDrawingArea = (touch.target.movingBox.offset().left == 280px &&
+                    //                     touch.target.movingBox.offset().top == 430px)
+
+                if (outsideDrawingArea) {
+                    (touch.target.movingBox).remove();
+                }
+
                 touch.target.movingBox = null;
+            }
+
+            var touchCache = cache[touch.identifier];
+            if (touchCache && touchCache.makeABox) {
+                    if (touchCache.makeABox.width < 10 && touchCache.makeABox.height < 10) {
+                        var incorrectBox = touchCache;
+                    }
+                $('#' + touch.identifier).removeClass('box-create');
+                if (incorrectBox) {
+                    $('#' + touch.identifier).remove();
+                }
+                delete touchCache;
             }
         });
     };
@@ -92,6 +234,8 @@
 
         $("div.box").each((index, element) => {
             let $element = $(element);
+            //mot sure if i need this 
+            var trashCan = (".trash-can");
 
             // If it's highlighted, we don't accelerate it because it is under a finger.
             if ($element.hasClass("box-highlight")) {
@@ -153,6 +297,8 @@
             .each((index, element) => {
                 element.addEventListener("touchmove", trackDrag, false);
                 element.addEventListener("touchend", endDrag, false);
+                element.addEventListener("touchstart", startCreate, false);
+                element.addEventListener("touchend", endDraw, false);
             })
 
             .find("div.box").each((index, element) => {
@@ -184,3 +330,5 @@
         return this;
     };
 })(jQuery);
+
+
