@@ -8,13 +8,12 @@
             var touchCache = {};
             cache[touch.identifier] = touchCache;
             touchCache.makeABox = {};
-            touchCache.makeABox = {};
+            // touchCache.makeABox = {};
             touchCache.initialX = touch.pageX;
             touchCache.initialY = touch.pageY;
             touchCache.makeABox.height = 0;
             touchCache.makeABox.width = 0;
 
-// updted this
             var defaultBox = $("<div id=\"" + 
                 touch.identifier + "\" class=\"box\"style=\"width: " +
                 touchCache.makeABox.width + "px; height: " + 
@@ -26,17 +25,17 @@
                 position: {left: touch.pageX, top: touch.pageY},
                 velocity: { x: 0, y: 0, z: 0 },
                 acceleration: { x: 0, y: 0, z: 0}
-            });
-//updated^ this
-       
+            });       
+
+            defaultBox.addClass("create-highlight");
 
             $(touch.target).append(defaultBox);
+
             $("#" + touch.identifier).addClass("make-a-box");
             $(touch.target).find("div.box").each(function (index, element) {
                 element.addEventListener("touchstart", startMove, false);
                 element.addEventListener("touchend", unhighlight, false);
             });
-
         });
         event.preventDefault();
     }
@@ -57,18 +56,6 @@
                 $(touch.target).data('position', newPosition);
                 touch.target.movingBox.offset(newPosition);
             }
-
-            // if (leftPos < 0 || topPos < 0 || rightPos > parent.width() || bottomPos > parent.height()) {
-            //     deleteBox == true;
-            // }
-            // else if (leftPos == 280px || bottomPos == 430px) {
-            //     deleteBox == true
-            // }
-            // if (deleteBox) {
-            //      target.addClass("box-delete");
-            // } else {
-            //     target.removeClass("box-delete");
-            // }
 
             //CHANGE THIS
             var touchCache = cache[touch.identifier];
@@ -95,47 +82,77 @@
                     height: touchCache.makeABox.height,
                     left: touchCache.makeABox.left,
                     top: touchCache.makeABox.top
-                });
+                }).data('position', {left: touchCache.makeABox.left,
+                                        top: touchCache.makeABox.top});
             }
-
-
-
         });
-
         // Don't do any touch scrolling.
         event.preventDefault();
     };
 
 
 //added this
-    let resize = (event) => {
-        $.each(event.changedTouches, (index, touch) => {
-            element.addEventListener("gesturechange", gestureChange, false);
-            element.addEventListener("gestureend", gestureEnd, false);
+    // let resize = (event) => {
+    //     $.each(event.changedTouches, (index, touch) => {
+    //         element.addEventListener("gesturechange", gestureChange, false);
+    //         element.addEventListener("gestureend", gestureEnd, false);
             
-            function gestureChange(e) {
-                e.preventDefault();
-                scale = e.scale;
-                var tempWidth = _width * scale;
+    //         function gestureChange(e) {
+    //             e.preventDefault();
+    //             scale = e.scale;
+    //             var tempWidth = _width * scale;
 
-                if (tempWidth > max) tempWidth = max;
-                if (tempWidth < min) tempWidth = min;
+    //             if (tempWidth > max) tempWidth = max;
+    //             if (tempWidth < min) tempWidth = min;
 
-                $('#square').css({
-                    'width': tempWidth + 'px',
-                'height': tempWidth + 'px'
-                });
-            }
+    //             $('#square').css({
+    //                 'width': tempWidth + 'px',
+    //             'height': tempWidth + 'px'
+    //             });
+    //         }
 
-            function gestureEnd(e) {
+    //         function gestureEnd(e) {
 
-                e.preventDefault();
-                _width = parseInt($('#square').css('width'));
-            }
+    //             e.preventDefault();
+    //             _width = parseInt($('#square').css('width'));
+    //         }
 
-        });
-    };
+    //     });
+    // };
 //added this
+
+    let gestureStart = (event) => {
+        $("p.log").text("GESTURE START");
+        $(".drawing-area").unbind("touchstart").unbind("touchmove").unbind("touchend");
+        let box = $(event.currentTarget);
+        $("div.box").unbind("touchstart").unbind("touchmove").unbind("touchend");
+        box.data({
+            startWidth: box.width(),
+            startHeight: box.height()
+        });
+    };
+
+    let gestureChange = (event) => {
+        event.preventDefault();
+        let scale = event.scale;
+
+        let box = $(event.currentTarget);
+        box.width(box.data("startWidth") * scale);
+        box.height(box.data("startHeight") * scale);
+        box.offset(box.data("position"));
+        $("p.log").text("GESTURE CHANGE " + event.scale);
+    };
+
+    let gestureEnd = (event) => {
+        $("p.log").text("GESTURE END");
+        $(".drawing-area")
+            .bind("touchstart", startDraw)
+            .bind("touchmove", trackDrag)
+            .bind("touchend", endDrag);
+        $("div.box")
+            .bind("touchstart", startMove)
+            .bind("touchend", unhighlight);
+    }
 
 
 
@@ -155,28 +172,18 @@
                     parentTop = parentHeight + boxParent.offset().bottom,
                     parentLeft = parentHeight + boxParent.offset().right,
 
-
-//new
-                    // outsideDrawingArea = 
-                    //                 touch.target.movingBox.offset().left > parentRight ||
-                    //                 touch.target.movingBox.offset().top > parentBottom ||
-                    //                 (touch.target.movingBox.offset().bottom < parentTop ||
-                    //                 touch.target.movingBox.offset.right < parentLeft);
-
                     outsideDrawingArea = 
-                                    touch.target.movingBox.offset().left > 280 &&
-                                    touch.target.movingBox.offset().top > 430;
+                                    (touch.target.movingBox.offset().left > 280 &&
+                                    touch.target.movingBox.offset().top > 430);
                                     // touch.target.movingBox.offset().top > 430 &&
                                     // (touch.target.movingBox.offset().bottom < 50 &&
                                     // touch.target.movingBox.offset.right < 90);
 
                     //style="width: 50px; height: 90px; left: 280px; top: 430px"
-//new^
 
                 if (outsideDrawingArea) {
                     (touch.target.movingBox).remove();
                 }
-
                 touch.target.movingBox = null;
             }
 
@@ -185,7 +192,14 @@
                     if (touchCache.makeABox.width < 10 && touchCache.makeABox.height < 10) {
                         var incorrectBox = touchCache;
                     }
+                // $('#' + touch.identifier).removeClass('box-highlight');
                 $('#' + touch.identifier).removeClass('box-create');
+                $("#" + touch.identifier)[0].addEventListener("gesturechange", gestureChange, false);
+                $("#" + touch.identifier)[0].addEventListener("gesturestart", gestureStart, false);
+                $("#" + touch.identifier)[0].addEventListener("gestureend", gestureEnd, false);
+
+                $('#' + touch.identifier).removeClass('create-highlight');
+
                 if (incorrectBox) {
                     $('#' + touch.identifier).remove();
                 }
@@ -223,7 +237,6 @@
             touch.target.deltaX = touch.pageX - startOffset.left;
             touch.target.deltaY = touch.pageY - startOffset.top;
         });
-
         // Eat up the event so that the drawing area does not
         // deal with it.
         event.stopPropagation();
@@ -256,6 +269,9 @@
 
             // If it's highlighted, we don't accelerate it because it is under a finger.
             if ($element.hasClass("box-highlight")) {
+                return;
+            }
+            if ($element.hasClass("create-highlight")) {
                 return;
             }
 
@@ -315,19 +331,20 @@
                 element.addEventListener("touchmove", trackDrag, false);
                 element.addEventListener("touchend", endDrag, false);
                 element.addEventListener("touchstart", startCreate, false);
-                element.addEventListener("touchend", endDraw, false);
+                //element.addEventListener("touchend", endDraw, false);
             })
 
-            .find("div.box").each((index, element) => {
-                element.addEventListener("touchstart", startMove, false);
-                element.addEventListener("touchend", unhighlight, false);
+//don't need this:
+            // .find("div.box").each((index, element) => {
+            //     element.addEventListener("touchstart", startMove, false);
+            //     element.addEventListener("touchend", unhighlight, false);
 
-                $(element).data({
-                    position: $(element).offset(),
-                    velocity: { x: 0, y: 0, z: 0 },
-                    acceleration: { x: 0, y: 0, z: 0 }
-                });
-            });
+            //     $(element).data({
+            //         position: $(element).offset(),
+            //         velocity: { x: 0, y: 0, z: 0 },
+            //         acceleration: { x: 0, y: 0, z: 0 }
+            //     });
+            // });
 
         // In this sample, device acceleration is the _sole_ determiner of a box's acceleration.
         window.ondevicemotion = (event) => {
