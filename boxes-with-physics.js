@@ -92,37 +92,37 @@
 
 
     let gestureStart = (event) => {
-        $("p.log").text("GESTURE START");
-        $(".drawing-area").unbind("touchstart").unbind("touchmove").unbind("touchend");
-        let box = $(event.currentTarget);
-        $("div.box").unbind("touchstart").unbind("touchmove").unbind("touchend");
-        box.data({
-            startWidth: box.width(),
-            startHeight: box.height()
-        });
-    };
+        //$("p.log").text("GESTURE START");
+        $(".drawing-area").unbind("touchstart").unbind("touchmove").unbind("touchend");
+        let box = $(event.currentTarget);
+        $("div.box").unbind("touchstart").unbind("touchmove").unbind("touchend");
+        box.data({
+            startWidth: box.width(),
+            startHeight: box.height()
+        });
+    };
 
-    let gestureChange = (event) => {
-        event.preventDefault();
-        let scale = event.scale;
+    let gestureChange = (event) => {
+        event.preventDefault();
+        let scale = event.scale;
 
-        let box = $(event.currentTarget);
-        box.width(box.data("startWidth") * scale);
-        box.height(box.data("startHeight") * scale);
-        box.offset(box.data("position"));
-        $("p.log").text("GESTURE CHANGE " + event.scale);
-    };
+        let box = $(event.currentTarget);
+        box.width(box.data("startWidth") * scale);
+        box.height(box.data("startHeight") * scale);
+        box.offset(box.data("position"));
+        $("p.log").text("GESTURE CHANGE " + event.scale);
+    };
 
-    let gestureEnd = (event) => {
-        $("p.log").text("GESTURE END");
-        $(".drawing-area")
-            .bind("touchstart", startDraw)
-            .bind("touchmove", trackDrag)
-            .bind("touchend", endDrag);
-        $("div.box")
-            .bind("touchstart", startMove)
-            .bind("touchend", unhighlight);
-    }
+    let gestureEnd = (event) => {
+        $("p.log").text("GESTURE END");
+        $(".drawing-area")
+            .bind("touchstart", startDraw)
+            .bind("touchmove", trackDrag)
+            .bind("touchend", endDrag);
+        $("div.box")
+            .bind("touchstart", startMove)
+            .bind("touchend", unhighlight);
+    }
 
 
 
@@ -165,8 +165,8 @@
                 // $('#' + touch.identifier).removeClass('box-highlight');
                 $('#' + touch.identifier).removeClass('box-create');
                 $("#" + touch.identifier)[0].addEventListener("gesturechange", gestureChange, false);
-                $("#" + touch.identifier)[0].addEventListener("gesturestart", gestureStart, false);
-                $("#" + touch.identifier)[0].addEventListener("gestureend", gestureEnd, false);
+                $("#" + touch.identifier)[0].addEventListener("gesturestart", gestureStart, false);
+                $("#" + touch.identifier)[0].addEventListener("gestureend", gestureEnd, false);
 
                 $('#' + touch.identifier).removeClass('create-highlight');
 
@@ -304,18 +304,6 @@
                 //element.addEventListener("touchend", endDraw, false);
             })
 
-//don't need this:
-            // .find("div.box").each((index, element) => {
-            //     element.addEventListener("touchstart", startMove, false);
-            //     element.addEventListener("touchend", unhighlight, false);
-
-            //     $(element).data({
-            //         position: $(element).offset(),
-            //         velocity: { x: 0, y: 0, z: 0 },
-            //         acceleration: { x: 0, y: 0, z: 0 }
-            //     });
-            // });
-
         // In this sample, device acceleration is the _sole_ determiner of a box's acceleration.
         window.ondevicemotion = (event) => {
             let a = event.accelerationIncludingGravity;
@@ -334,4 +322,3 @@
         return this;
     };
 })(jQuery);
-
