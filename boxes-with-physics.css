@@ -11,7 +11,7 @@
 }
 
 .trash {
-    border: thick solid blue;
+    border: white;
     position: absolute;
 }
 
@@ -24,6 +24,7 @@
 }*/
 
 .make-a-box {
-    border: thin solid red;
+    border: thin solid purple;
     position: absolute;
 }
+
