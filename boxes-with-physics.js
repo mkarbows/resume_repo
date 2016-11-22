@@ -1,8 +1,8 @@
 (($) => {
     //Megan, and I worked on this together (on the same computer) so the committs are from both of us!!
+    //We got help from stackOverflow for caching and our default box!
 
     var cache = {};
-    //added this 
     var gestureIsHappening = false;
 
     let startCreate = (event) => {
@@ -10,7 +10,6 @@
             var touchCache = {};
             cache[touch.identifier] = touchCache;
             touchCache.makeABox = {};
-            // touchCache.makeABox = {};
             touchCache.initialX = touch.pageX;
             touchCache.initialY = touch.pageY;
             touchCache.makeABox.height = 0;
@@ -46,6 +45,10 @@
      * Tracks a box as it is rubberbanded or moved across the drawing area.
      */
     let trackDrag = (event) => {
+        if (gestureIsHappening) {
+            return;
+        }
+
         $.each(event.changedTouches, function (index, touch) {
             // Don't bother if we aren't tracking anything.
             if (touch.target.movingBox) {
@@ -59,14 +62,13 @@
                 touch.target.movingBox.offset(newPosition);
             }
 
-            //CHANGE THIS
             var touchCache = cache[touch.identifier];
             if (touchCache && touchCache.makeABox) {
                 var touchX = touch.pageX,
                     touchY = touch.pageY,
                     touchXGreater = touch.pageX > touchCache.initialX,
                     touchYGreater = touch.pageY > touchCache.initialY;
-                //  CHANGE THIS
+                
                 touchCache.makeABox = {
                     width   : touchXGreater ? touchX - touchCache.initialX : touchCache.initialX - touchX,
                     height  : touchYGreater ? touchY - touchCache.initialY : touchCache.initialY - touchY,
@@ -87,13 +89,11 @@
         event.preventDefault();
     };
 
-
+    //gesture overrides the moving of two boxes (scales them both simultaneously instead), Dondi said this was okay! 
     let gestureStart = (event) => {
-        //$("p.log").text("GESTURE START");
         gestureIsHappening = true;
-        $(".drawing-area").unbind("touchstart").unbind("touchmove").unbind("touchend");
+        event.preventDefault();
         let box = $(event.currentTarget);
-        $("div.box").unbind("touchstart").unbind("touchmove").unbind("touchend");
         box.data({
             startWidth: box.width(),
             startHeight: box.height()
@@ -103,23 +103,14 @@
     let gestureChange = (event) => {
         event.preventDefault();
         let scale = event.scale;
-
         let box = $(event.currentTarget);
         box.width(box.data("startWidth") * scale);
         box.height(box.data("startHeight") * scale);
         box.offset(box.data("position"));
-        //$("p.log").text("GESTURE CHANGE " + event.scale);
     };
 
     let gestureEnd = (event) => {
-        $(".drawing-area")
-            .bind("touchstart", startDraw)
-            .bind("touchmove", trackDrag)
-            .bind("touchend", endDrag);
-        $("div.box")
-            .bind("touchstart", startMove)
-            .bind("touchend", unhighlight);
-        gestureIsHappening = false;
+        event.preventDefault();
     }
 
     /**
@@ -142,11 +133,6 @@
                                     //265px; top: 440px"
                                     (touch.target.movingBox.offset().left > 265 &&
                                     touch.target.movingBox.offset().top > 440);
-                                    // touch.target.movingBox.offset().top > 430 &&
-                                    // (touch.target.movingBox.offset().bottom < 50 &&
-                                    // touch.target.movingBox.offset.right < 90);
-
-                    //style="width: 50px; height: 90px; left: 280px; top: 430px"
 
                 if (outsideDrawingArea) {
                     (touch.target.movingBox).remove();
@@ -159,7 +145,7 @@
                     if (touchCache.makeABox.width < 10 && touchCache.makeABox.height < 10) {
                         var incorrectBox = touchCache;
                     }
-                // $('#' + touch.identifier).removeClass('box-highlight');
+
                 $('#' + touch.identifier).removeClass('box-create');
                 $("#" + touch.identifier)[0].addEventListener("gesturechange", gestureChange, false);
                 $("#" + touch.identifier)[0].addEventListener("gesturestart", gestureStart, false);
@@ -298,7 +284,6 @@
                 element.addEventListener("touchmove", trackDrag, false);
                 element.addEventListener("touchend", endDrag, false);
                 element.addEventListener("touchstart", startCreate, false);
-                //element.addEventListener("touchend", endDraw, false);
             })
 
         // In this sample, device acceleration is the _sole_ determiner of a box's acceleration.
@@ -319,3 +304,4 @@
         return this;
     };
 })(jQuery);
+
