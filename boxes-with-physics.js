@@ -91,36 +91,6 @@
     };
 
 
-//added this
-    // let resize = (event) => {
-    //     $.each(event.changedTouches, (index, touch) => {
-    //         element.addEventListener("gesturechange", gestureChange, false);
-    //         element.addEventListener("gestureend", gestureEnd, false);
-            
-    //         function gestureChange(e) {
-    //             e.preventDefault();
-    //             scale = e.scale;
-    //             var tempWidth = _width * scale;
-
-    //             if (tempWidth > max) tempWidth = max;
-    //             if (tempWidth < min) tempWidth = min;
-
-    //             $('#square').css({
-    //                 'width': tempWidth + 'px',
-    //             'height': tempWidth + 'px'
-    //             });
-    //         }
-
-    //         function gestureEnd(e) {
-
-    //             e.preventDefault();
-    //             _width = parseInt($('#square').css('width'));
-    //         }
-
-    //     });
-    // };
-//added this
-
     let gestureStart = (event) => {
         $("p.log").text("GESTURE START");
         $(".drawing-area").unbind("touchstart").unbind("touchmove").unbind("touchend");
