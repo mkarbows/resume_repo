@@ -2,6 +2,8 @@
     //Megan, and I worked on this together (on the same computer) so the committs are from both of us!!
 
     var cache = {};
+    //added this 
+    var gestureIsHappening = false;
 
     let startCreate = (event) => {
         $.each(event.changedTouches, function (index, touch) {
@@ -66,11 +68,6 @@
                     touchYGreater = touch.pageY > touchCache.initialY;
                 //  CHANGE THIS
                 touchCache.makeABox = {
-                    // if (touchXGreater) {
-                    //     width : touchX - touchCache.initialX
-                    // } else {
-                    //     width : touchCache.initialX - touchX
-                    // }
                     width   : touchXGreater ? touchX - touchCache.initialX : touchCache.initialX - touchX,
                     height  : touchYGreater ? touchY - touchCache.initialY : touchCache.initialY - touchY,
                     left    : touchXGreater ? touchCache.initialX : touchX,
@@ -93,6 +90,7 @@
 
     let gestureStart = (event) => {
         //$("p.log").text("GESTURE START");
+        gestureIsHappening = true;
         $(".drawing-area").unbind("touchstart").unbind("touchmove").unbind("touchend");
         let box = $(event.currentTarget);
         $("div.box").unbind("touchstart").unbind("touchmove").unbind("touchend");
@@ -110,11 +108,10 @@
         box.width(box.data("startWidth") * scale);
         box.height(box.data("startHeight") * scale);
         box.offset(box.data("position"));
-        $("p.log").text("GESTURE CHANGE " + event.scale);
+        //$("p.log").text("GESTURE CHANGE " + event.scale);
     };
 
     let gestureEnd = (event) => {
-        $("p.log").text("GESTURE END");
         $(".drawing-area")
             .bind("touchstart", startDraw)
             .bind("touchmove", trackDrag)
@@ -122,9 +119,8 @@
         $("div.box")
             .bind("touchstart", startMove)
             .bind("touchend", unhighlight);
+        gestureIsHappening = false;
     }
-
-
 
     /**
      * Concludes a drawing or moving sequence.
@@ -143,8 +139,9 @@
                     parentLeft = parentHeight + boxParent.offset().right,
 
                     outsideDrawingArea = 
-                                    (touch.target.movingBox.offset().left > 280 &&
-                                    touch.target.movingBox.offset().top > 430);
+                                    //265px; top: 440px"
+                                    (touch.target.movingBox.offset().left > 265 &&
+                                    touch.target.movingBox.offset().top > 440);
                                     // touch.target.movingBox.offset().top > 430 &&
                                     // (touch.target.movingBox.offset().bottom < 50 &&
                                     // touch.target.movingBox.offset.right < 90);
