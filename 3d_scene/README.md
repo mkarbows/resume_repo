@@ -1,1 +1,3 @@
-To view the final product of this project, clone this folder and run a simple http server, then visit the 3dObject.html link.
+To view the final product of this project, clone this folder and run a simple http server, then visit the 3dObject.html link on your local host.  
+  
+For more information on what the assignment requirements were see [Assignment.md](/Assignment.md)
