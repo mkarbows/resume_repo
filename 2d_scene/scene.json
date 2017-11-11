@@ -1,0 +1,235 @@
+[
+    {
+        "sprite": "flower",
+        "keyframes": [
+            {
+                "frame": 0,
+                "tx": -500,
+                "ty": 300
+            },
+
+            {
+                "frame": 10,
+                "tx": -500,
+                "ty": 300,
+                "sx": 0.5,
+                "sy": 0.5,
+                "petalRotation": 0
+            },
+            
+            {
+                "frame": 20,
+                "tx": 300,
+                "ty": 300,
+                "sx": 0.75,
+                "sy": 0.75,
+                "petalRotation": 180,
+                "ease": "quadEaseIn"
+            },
+
+            {
+                "frame": 50,
+                "tx": 300,
+                "ty": 300,
+                "petalRotation": 0
+            },
+
+            {
+                "frame": 70,
+                "tx": 300,
+                "ty": 300,
+                "sx": 1.0,
+                "sy": 1.0,
+                "rotate": 0
+            },
+
+            {
+                "frame": 85,
+                "tx": 300,
+                "ty": 300,
+                "sx": 1.0,
+                "sy": 1.0,
+                "rotate": 0
+            },
+
+            {
+                "frame": 100,
+                "tx": 300,
+                "ty": 300,
+                "sx": 1.0,
+                "sy": 1.0,
+                "rotate": 180
+            },
+
+            {
+                "frame": 125,
+                "tx": 300,
+                "ty": 300,
+                "rotate": 360,
+                "ease": "easeOutBounce"
+            },
+
+            {
+                "frame": 175,
+                "tx": 300,
+                "ty": 400,
+                "sx": 0.0001,
+                "sy": 0.0001,
+                "ease": "easeOutBounce"
+            },
+
+             {
+                "frame": 181,
+                "tx": -500,
+                "ty": -500
+             }
+        ]
+    },
+
+    {
+        "sprite": "wave",
+        "keyframes": [
+
+            {
+                "frame": 0,
+                "tx": 1000,
+                "ty": 500
+            },
+
+            {
+                "frame": 100,
+                "tx": 1000,
+                "ty": 500,
+                "curve1ControlX": 0,
+                "curve1ControlY": 0,
+                "ease": "elastic"
+            },
+
+            {
+                "frame": 175,
+                "tx": 200,
+                "ty": 500
+            },
+
+            {
+                "frame": 180,
+                "tx": 400,
+                "ty": 400,
+                "sx": 2.0,
+                "sy": 2.0,
+                "curve1ControlX": 0,
+                "curve1ControlY": 0,
+                "ease": "elastic"
+            },
+
+            {
+                "frame": 181,
+                "tx": -500,
+                "ty": -500
+            }
+        ]
+    },
+
+    {
+        "sprite": "eyeballs",
+        "keyframes": [
+            {
+                "frame": 0,
+                "tx": -500,
+                "ty": -500,
+                "sx": 1.0,
+                "sy": 1.0,
+                "pupilSize": 0.5
+            },
+
+            {
+                "frame": 10,
+                "tx": 150,
+                "ty": 100,
+                "rotate": 0,
+                "pupilSize": 0.5,
+                "ease": "quadEaseIn"
+            },
+
+            {
+                "frame": 20,
+                "tx": 150,
+                "ty": 100,
+                "rotate": 0,
+
+                "pupilSize": 0.5
+            },
+
+            {
+                "frame": 30,
+                "tx": 150,
+                "ty": 100,
+                "rotate": 0,
+                "pupilSize": 2.5
+            },
+
+            {
+                "frame": 40,
+                "tx": 150,
+                "ty": 100,
+                "rotate": 0,
+                "pupilSize": 0.5
+            },
+
+            {
+                "frame": 50,
+                "tx": 150,
+                "ty": 100,
+                "sx": 1.0,
+                "sy": 1.0,
+                "rotate": 0,
+                "pupilSize": 2.5
+            },
+
+            {
+                "frame": 70,
+                "tx": 150,
+                "ty": 100,
+                "rotate": 180,
+                "sx": 0.1,
+                "sy": 0.1
+            },
+
+            {
+                "frame": 75,
+                "tx": 300,
+                "ty": 100
+            },
+
+            {
+                "frame": 80,
+                "tx": 150,
+                "ty": 100,
+                "rotate": 360,
+                "sx": 1.0,
+                "sy": 1.0
+            },
+
+            {
+                "frame": 125,
+                "tx": 500,
+                "ty": 500,
+                "rotate": 300
+            },
+
+            {
+                "frame": 175,
+                "tx": 100,
+                "ty": 100,
+                "rotate": 100,
+                "pupilSize": 0
+            },
+
+            {
+                "frame": 181,
+                "tx": -500,
+                "ty": -500
+            }
+        ]
+    }
+]
