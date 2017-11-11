@@ -1,6 +1,6 @@
 **CMSI 371** Computer Graphics, Spring 2017
 
-> As advertised, this is really a single overall project—a 2D animated scene implemented from the ground up—broken up into two separate assignments. This README contains the instructions for both of these assignments. 
+> As advertised, this is really a single overall project—a 2D animated scene implemented from the ground up—broken up into two separate assignments.
 
 # Assignment 0201
 This initial assignment is meant to get you into a development groove with 2D canvas graphics, as well as mark your first step toward an animated 2D scene.
